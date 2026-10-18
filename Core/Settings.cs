@@ -5,7 +5,7 @@ namespace TrimZero.Core;
 
 public sealed class AppSettings
 {
-    public int Version { get; set; } = 1;
+    public int Version { get; set; } = 2;
     public string DeviceProduct { get; set; } = "Meza Trim";
     public string AxisName { get; set; } = "X Axis";
     public bool Invert { get; set; }
@@ -13,10 +13,11 @@ public sealed class AppSettings
     public double WheelMax { get; set; } = 65535;
     public double Sensitivity { get; set; } = 1.0;
     public bool Topmost { get; set; } = true;
-    public double? TakeoffPct { get; set; }
+    public double? MarkWheel { get; set; }
     public double? WindowLeft { get; set; }
     public double? WindowTop { get; set; }
     public Dictionary<string, bool> AircraftInvert { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, double> AircraftTakeoff { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }
 
 public static class SettingsStore

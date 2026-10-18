@@ -27,6 +27,7 @@ public sealed class TrimEngine
     private long _lastMoveMs;
 
     private bool _hasZero;
+    private bool _hasTakeoffDatum;
     private double _zeroWheel;
     private double _zeroTrim = 50;
     private double _takeoffPct = -1;
@@ -129,9 +130,10 @@ public sealed class TrimEngine
             if (!wasConnected)
             {
                 // First frame after connect: adopt the aircraft's trim so the first
-                // wheel movement cannot jump. That is a datum, not a takeoff mark.
+                // wheel movement cannot jump. If a takeoff datum was restored for
+                // this aircraft, keep it; the control base is still the live trim.
                 _predicted = pct;
-                ZeroLocked(markTakeoff: false);
+                if (!_hasTakeoffDatum) ZeroLocked(markTakeoff: false);
                 return;
             }
 
@@ -156,9 +158,23 @@ public sealed class TrimEngine
         lock (_gate) ZeroLocked(markTakeoff: true);
     }
 
-    public void SetTakeoffRef(double pct)
+    /// <summary>
+    /// Restore a saved takeoff datum for an aircraft. The aircraft's live trim is
+    /// still the control base, so the next wheel movement cannot snap.
+    /// </summary>
+    public void RestoreDatum(double takeoffPct, double wheelCounts)
     {
-        lock (_gate) _takeoffPct = pct is >= 0 and <= 100 ? pct : -1;
+        lock (_gate)
+        {
+            if (takeoffPct is < 0 or > 100 || !double.IsFinite(wheelCounts)) return;
+            _takeoffPct = takeoffPct;
+            _zeroWheel = wheelCounts;
+            _zeroTrim = takeoffPct;
+            _hasZero = true;
+            _hasTakeoffDatum = true;
+            _predicted = _simPct;
+            _pending = null;
+        }
     }
 
     /// <summary>Adopt the aircraft's trim after a flight or aircraft change.</summary>
@@ -168,6 +184,8 @@ public sealed class TrimEngine
         {
             _predicted = _simPct;
             _pending = null;
+            _takeoffPct = -1;
+            _hasTakeoffDatum = false;
             ZeroLocked(markTakeoff: false);
         }
     }
@@ -179,7 +197,11 @@ public sealed class TrimEngine
         if (!_hasCounts) return;
         _zeroWheel = _lastCounts;
         _zeroTrim = _simPct;
-        if (markTakeoff) _takeoffPct = _simPct;
+        if (markTakeoff)
+        {
+            _takeoffPct = _simPct;
+            _hasTakeoffDatum = true;
+        }
         _hasZero = true;
     }
 
@@ -197,7 +219,7 @@ public sealed class TrimEngine
     {
         lock (_gate)
         {
-            double ghost = _hasZero
+            double ghost = _hasZero && _hasCounts
                 ? Math.Clamp(_zeroTrim + (_lastCounts - _zeroWheel) * GainForSide(_lastCounts) * (_invert ? -1 : 1), 0, 100)
                 : _simPct;
 
@@ -209,7 +231,8 @@ public sealed class TrimEngine
                 Ap: _ap,
                 HasZero: _hasZero,
                 WheelCounts: _lastCounts,
-                TakeoffPct: _takeoffPct);
+                TakeoffPct: _takeoffPct,
+                HasTakeoffDatum: _hasTakeoffDatum);
         }
     }
 
@@ -243,5 +266,6 @@ public sealed class TrimEngine
         bool Ap,
         bool HasZero,
         int WheelCounts,
-        double TakeoffPct);
+        double TakeoffPct,
+        bool HasTakeoffDatum);
 }

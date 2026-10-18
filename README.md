@@ -7,6 +7,9 @@ no telemetry, no updater.
 
 [Download the latest release](https://github.com/flyingsotong/trim-zero/releases/latest)  ·  [Tip jar](https://magentadebrief.com/donate/) if it earns its place
 
+> v0.2.0 is in development: the tip jar and per-aircraft takeoff memory. The current
+> release is v0.1.0.
+
 ![Trim Zero](docs/og.png)
 
 ## The problem
@@ -28,6 +31,8 @@ arc, and a visible drift when the aircraft and the box disagree.
 - **Drift.** Shows when the autopilot or anything else has moved the trim away from the
   mark, and by how much.
 - **Direction switch.** Normal or inverted, one tap, remembered per aircraft.
+- **Per-aircraft datum.** Direction and the takeoff datum are remembered for each
+  aircraft; switching back restores them without moving the aircraft.
 - **Autopilot clutch.** The wheel is inert while the autopilot is flying; on disconnect
   the control reseeds but the datum is kept, so the mark does not silently lie.
 - One 400 x 632 window. No tray, no updater, no telemetry, no network.

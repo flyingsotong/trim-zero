@@ -106,19 +106,25 @@ public partial class MainWindow : Window
 
     private void CycleSpeed_Click(object sender, RoutedEventArgs e) => _vm.CycleSpeed();
 
-    private void Feedback_Click(object sender, MouseButtonEventArgs e)
+    private void Feedback_Click(object sender, MouseButtonEventArgs e) =>
+        OpenUrl($"mailto:alan@magentadebrief.com?subject={Uri.EscapeDataString($"Trim Zero feedback ({_vm.VersionText})")}");
+
+    private void Donate_Click(object sender, MouseButtonEventArgs e) =>
+        OpenUrl("https://magentadebrief.com/donate/");
+
+    private static void OpenUrl(string url)
     {
         try
         {
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
             {
-                FileName = "mailto:alan@magentadebrief.com?subject=Trim%20Zero%20feedback%20(v0.1.0)",
+                FileName = url,
                 UseShellExecute = true,
             });
         }
         catch
         {
-            // A machine with no mail client is not worth interrupting the app for.
+            // A machine with no browser or mail client is not worth interrupting the app for.
         }
     }
 

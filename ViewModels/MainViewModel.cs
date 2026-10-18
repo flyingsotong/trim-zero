@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
@@ -74,13 +75,12 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
     public void Initialize(IntPtr hwnd)
     {
-        _engine.SetTakeoffRef(_settings.TakeoffPct ?? -1);
-
         if (_demo)
         {
             _engine.OnWheel(36053);
             DeviceText = "MEZA TRIM · X AXIS";
-            AircraftText = "CESSNA 172 SKYHAWK";
+            _aircraft = "CESSNA 172 SKYHAWK";
+            AircraftText = _aircraft;
         }
         else
         {
@@ -122,7 +122,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
         if (!wasConnected && state.Connected)
         {
-            _zeroedThisSession = false;
+            _zeroedThisSession = _engine.GetSnapshot().HasTakeoffDatum;
             NotifyDatumChip();
         }
 
@@ -134,7 +134,18 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             _zeroedThisSession = false;
             if (TryGetAircraftInvert(_aircraft, out bool saved))
                 ApplyInvert(saved, remember: false);
-            _engine.ResetToAircraft();
+
+            if (TryGetAircraftTakeoff(_aircraft, out double takeoff) &&
+                _settings.MarkWheel is double mark)
+            {
+                _engine.RestoreDatum(takeoff, mark);
+                _zeroedThisSession = true;
+            }
+            else
+            {
+                _engine.ResetToAircraft();
+            }
+
             NotifyDatumChip();
         }
     }
@@ -210,10 +221,15 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     public void Zero()
     {
         _engine.Zero();
+        var snapshot = _engine.GetSnapshot();
+        if (!snapshot.HasTakeoffDatum) return;
+
         _zeroedThisSession = true;
-        NotifyDatumChip();
-        _settings.TakeoffPct = _engine.GetSnapshot().TakeoffPct;
+        _settings.MarkWheel = snapshot.WheelCounts;
+        if (!string.IsNullOrWhiteSpace(_aircraft))
+            _settings.AircraftTakeoff[_aircraft] = snapshot.TakeoffPct;
         Save();
+        NotifyDatumChip();
     }
 
     private void NotifyDatumChip()
@@ -380,6 +396,23 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         value = false;
         return false;
     }
+
+    private bool TryGetAircraftTakeoff(string title, out double value)
+    {
+        foreach (var pair in _settings.AircraftTakeoff)
+        {
+            if (string.Equals(pair.Key, title, StringComparison.OrdinalIgnoreCase))
+            {
+                value = pair.Value;
+                return true;
+            }
+        }
+        value = 0;
+        return false;
+    }
+
+    public string VersionText { get; } =
+        "v" + (Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.0.0");
 
     public double? WindowLeft => _settings.WindowLeft;
     public double? WindowTop => _settings.WindowTop;
