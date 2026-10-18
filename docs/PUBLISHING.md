@@ -25,6 +25,19 @@ Create `dist\TrimZero-<version>-win-x64\` containing the publish output except t
 `.pdb`, plus `README.md`, `LICENSE`, `THIRD-PARTY-NOTICES.md` and `READ-ME-FIRST.txt`.
 Zip it and attach it to the GitHub release.
 
+Generate the hash and paste it into the release notes:
+
+```powershell
+Get-FileHash dist\TrimZero-<version>-win-x64.zip -Algorithm SHA256
+```
+
+The release notes must carry:
+
+- the SHA256 of the zip;
+- the SmartScreen warning ("the zip is unsigned, so Windows SmartScreen may warn on
+  first run");
+- the source URL, https://github.com/flyingsotong/trim-zero.
+
 3. Tag and push:
 
 ```powershell
@@ -35,7 +48,8 @@ git push
 git push origin v<version>
 ```
 
-4. Create the release from the tag, attach the zip, and paste the changelog.
+4. Create the release from the tag, attach the zip, and paste the changelog plus the
+   three items above.
 
 Do not commit `lib/*.dll` or `dist/`. The release zip includes the SimConnect
 redistributables so users do not need the SDK.

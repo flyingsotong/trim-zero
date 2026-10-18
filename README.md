@@ -5,7 +5,7 @@
 Analogue trim wheel calibration for Microsoft Flight Simulator. Free, Windows 10/11,
 no telemetry, no updater.
 
-[Download the latest release](https://github.com/flyingsotong/trim-zero/releases/latest)  ·  [Tip jar](https://magentadebrief.com/donate/) if it earns its place
+[Download the latest release](https://github.com/flyingsotong/trim-zero/releases/latest)  ·  [Source](https://github.com/flyingsotong/trim-zero)  ·  [Tip jar](https://magentadebrief.com/donate/) if it earns its place
 
 ![Trim Zero](docs/og.png)
 
@@ -60,6 +60,17 @@ steps, not an axis.
    if it is not already present.
 3. Run `TrimZero.exe`. The executable is unsigned, so Windows SmartScreen may warn on
    first run.
+
+## Verify the download
+
+Each release note carries the SHA256 of its zip. To check a download:
+
+```powershell
+Get-FileHash .\TrimZero-0.1.0-win-x64.zip -Algorithm SHA256
+```
+
+Compare it with the hash in the [release notes](https://github.com/flyingsotong/trim-zero/releases/latest).
+Substitute the file name you actually downloaded.
 
 ## Setup
 
