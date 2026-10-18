@@ -97,6 +97,11 @@ No network, no telemetry, no updater. Settings live in
 `%LOCALAPPDATA%\TrimZero\settings.json`. The only outbound action is the feedback link,
 which opens your mail client.
 
+## Support
+
+Trim Zero is free, with no telemetry and no upsell. If it saved you a bad flight, you
+can leave something in the tip jar: https://magentadebrief.com/donate/
+
 ## License
 
 MIT. Not affiliated with Meza or Microsoft.
