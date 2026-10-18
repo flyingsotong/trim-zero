@@ -2,7 +2,7 @@
 
 ## 0.2.0 - unreleased
 
-- Tip jar link on the main screen, next to the feedback link. It opens
+- Tip jar link in the settings footer, next to the version. It opens
   https://magentadebrief.com/donate/ in the default browser.
 - Direction and the takeoff datum are remembered per aircraft. Switching to a known
   aircraft restores its datum; the aircraft's live trim is still the control base, so
