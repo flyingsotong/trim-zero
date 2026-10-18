@@ -74,8 +74,8 @@ Substitute the file name you actually downloaded.
 
 ## Setup
 
-1. In MSFS Controls, clear the Meza's **Elevator Trim Axis** binding. Two writers will
-   fight if the sim still binds the axis.
+1. In MSFS Controls, clear the binding on your wheel's own **Elevator Trim Axis**
+   action. Two writers will fight if the sim still binds the axis.
 2. Start the sim and load a flight.
 3. In Trim Zero's settings, roll to full nose-down and press **SET**; roll to full
    nose-up and press **SET**. This measures the wheel's real stops.
