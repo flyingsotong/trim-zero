@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>TrimZero</AssemblyName>
+    <RootNamespace>TrimZero</RootNamespace>
+    <PlatformTarget>x64</PlatformTarget>
+    <Version>0.1.0</Version>
+    <Company>Alan Soon</Company>
+    <Product>Trim Zero</Product>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\trimzero.ico</ApplicationIcon>
+    <Description>Analogue trim wheel calibration for Microsoft Flight Simulator</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\trimzero.ico" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- SimConnect redistributables. Copy the two x64 files from the MSFS SDK
+         into lib/ (see lib/README.md). Override with -p:SimConnectDir=... if needed. -->
+    <SimConnectDir Condition="'$(SimConnectDir)' == ''">$(MSBuildProjectDirectory)\lib</SimConnectDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Vortice.DirectInput" Version="3.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.FlightSimulator.SimConnect">
+      <HintPath>$(SimConnectDir)\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <None Include="$(SimConnectDir)\SimConnect.dll" Link="SimConnect.dll" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

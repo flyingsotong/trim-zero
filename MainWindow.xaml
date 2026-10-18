@@ -1,0 +1,220 @@
+<Window x:Class="TrimZero.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:TrimZero.Controls"
+        Title="Trim Zero"
+        Icon="Assets/trimzero.ico"
+        Width="400" Height="632"
+        WindowStyle="None"
+        AllowsTransparency="False"
+        Background="{StaticResource Bg}"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Topmost="{Binding Topmost}"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        FontFamily="Bahnschrift"
+        Foreground="{StaticResource Text}">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" GlassFrameThickness="0"
+                      CornerRadius="18" UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+
+    <Border x:Name="Root" CornerRadius="18" Background="{StaticResource Bg}"
+            BorderBrush="{StaticResource Stroke}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="52" />
+                <RowDefinition Height="168" />
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="22,16,14,0" MouseLeftButtonDown="Header_MouseDown" Background="Transparent">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="7" Height="7" CornerRadius="2" Background="{StaticResource Amber}" VerticalAlignment="Center" />
+                    <TextBlock Text="TRIM" FontSize="15" FontWeight="SemiBold" Margin="9,0,0,0" VerticalAlignment="Center" />
+                    <TextBlock Text="ZERO" FontSize="15" FontWeight="Normal" Foreground="{StaticResource Muted}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Ellipse Width="6" Height="6" Fill="{Binding StatusBrush}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding StatusText}" FontSize="9" Foreground="{Binding StatusBrush}"
+                               Margin="7,1,0,0" VerticalAlignment="Center" />
+                    <Button Style="{StaticResource IconButton}" Content="⚙" FontFamily="Segoe UI Symbol"
+                            FontSize="13" Margin="12,0,0,0" Click="Settings_Click" ToolTip="Settings" />
+                    <Button Style="{StaticResource IconButton}" Content="—" FontFamily="Segoe UI Symbol"
+                            FontSize="12" Margin="2,0,0,0" Click="Minimize_Click" ToolTip="Minimize" />
+                    <Button Style="{StaticResource IconButton}" Content="✕" FontFamily="Segoe UI Symbol"
+                            FontSize="12" Margin="2,0,0,0" Click="Close_Click" ToolTip="Close" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Dial -->
+            <Grid Grid.Row="1" Margin="0,2,0,0">
+                <controls:TrimDial Width="306" Height="306" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   SimTrim="{Binding SimPct}" GhostTrim="{Binding GhostPct}"
+                                   TakeoffTrim="{Binding TakeoffPct}" HasZero="{Binding HasZero}"
+                                   IsConnected="{Binding IsConnected}" />
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,6,0,0" IsHitTestVisible="False">
+                    <TextBlock Text="{Binding SimText}" FontSize="58" FontWeight="SemiBold"
+                               Visibility="{Binding NumberVisibility}"
+                               HorizontalAlignment="Center" TextOptions.TextRenderingMode="ClearType" />
+                    <TextBlock Text="NO SIM" FontSize="20" Foreground="{StaticResource Muted}"
+                               Visibility="{Binding OfflineVisibility}" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                    <TextBlock Text="% TRIM" FontSize="9" Foreground="{StaticResource Muted}"
+                               Visibility="{Binding NumberVisibility}"
+                               HorizontalAlignment="Center" Margin="0,-4,0,0" />
+                    <Border Background="#18FFFFFF" CornerRadius="7" Padding="9,2" Margin="0,10,0,0"
+                            HorizontalAlignment="Center" Visibility="{Binding DatumChipVisibility}">
+                        <TextBlock Text="{Binding DatumChipText}" FontSize="8"
+                                   Foreground="{Binding DatumChipBrush}" />
+                    </Border>
+                </StackPanel>
+
+                <TextBlock Text="NOSE DN" FontSize="8" Foreground="{StaticResource Dim}"
+                           HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="28,0,0,34" />
+                <TextBlock Text="NOSE UP" FontSize="8" Foreground="{StaticResource Dim}"
+                           HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,28,34" />
+            </Grid>
+
+            <!-- Meters -->
+            <Grid Grid.Row="2" Margin="30,0,30,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="AIRCRAFT" FontSize="8" Foreground="{StaticResource Dim}" />
+                    <TextBlock Text="{Binding SimText}" FontSize="14" Margin="0,1,0,0" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="DRIFT" FontSize="8" Foreground="{StaticResource Dim}" HorizontalAlignment="Center" />
+                    <TextBlock Text="{Binding DriftText}" FontSize="14" Foreground="{Binding DriftBrush}"
+                               Margin="0,1,0,0" HorizontalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <TextBlock Text="WHEEL" FontSize="8" Foreground="{StaticResource Dim}" HorizontalAlignment="Right" />
+                    <TextBlock Text="{Binding WheelText}" FontSize="14"
+                               Margin="0,1,0,0" HorizontalAlignment="Right" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Action -->
+            <StackPanel Grid.Row="3" Margin="26,4,26,16" VerticalAlignment="Bottom">
+                <TextBlock Text="WHEEL DIRECTION" FontSize="8" Foreground="{StaticResource Dim}"
+                           HorizontalAlignment="Center" />
+                <ToggleButton Style="{StaticResource DirectionSwitch}" IsChecked="{Binding Invert, Mode=TwoWay}"
+                              HorizontalAlignment="Center" Margin="0,5,0,0"
+                              ToolTip="Reverse nose-up and nose-down for the current aircraft" />
+                <Button Style="{StaticResource ZeroButton}" Content="ZERO" Click="Zero_Click"
+                        IsEnabled="{Binding CanZero}" Margin="0,12,0,0" />
+                <TextBlock Text="ZERO AT THE TAKE OFF MARK  ·  CTRL + ALT + Z" FontSize="8"
+                           Foreground="{StaticResource Dim}" HorizontalAlignment="Center" Margin="0,10,0,0" />
+                <TextBlock Text="{Binding AircraftText}" FontSize="9" Foreground="{StaticResource Muted}"
+                           HorizontalAlignment="Center" Margin="0,7,0,0" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="Send comments, bugs, anything" FontSize="8"
+                           Foreground="{StaticResource Brush.Link}" TextDecorations="Underline"
+                           Cursor="Hand" HorizontalAlignment="Center" Margin="0,5,0,0"
+                           MouseLeftButtonUp="Feedback_Click" ToolTip="alan@magentadebrief.com" />
+            </StackPanel>
+
+            <!-- Settings overlay -->
+            <Border Grid.RowSpan="4" CornerRadius="18" Background="{StaticResource Bg}" Padding="24,20,24,20"
+                    Visibility="{Binding IsSettingsOpen, Converter={StaticResource BoolToVis}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,6">
+                        <TextBlock Text="SETTINGS" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <Button Style="{StaticResource IconButton}" Content="✕" FontFamily="Segoe UI Symbol"
+                                FontSize="12" HorizontalAlignment="Right" Click="Done_Click" />
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,6,0,6">
+                        <StackPanel>
+                            <TextBlock Text="WHEEL" FontSize="8" Foreground="{StaticResource Dim}" Margin="0,8,0,6" />
+                            <Grid>
+                                <TextBlock Text="{Binding DeviceText}" FontSize="12" VerticalAlignment="Center" />
+                                <Button Style="{StaticResource SmallButton}" Content="AXIS  ›" HorizontalAlignment="Right"
+                                        IsEnabled="{Binding HasMultipleAxes}" Click="CycleAxis_Click" />
+                            </Grid>
+                            <TextBlock Text="Clear the Meza's Elevator Trim Axis binding in MSFS Controls. Two writers will fight."
+                                       FontSize="9" Foreground="{StaticResource Amber}" TextWrapping="Wrap" Margin="0,8,0,0" />
+
+                            <Border Height="1" Background="{StaticResource Stroke}" Margin="0,16,0,0" />
+
+                            <TextBlock Text="TRAVEL" FontSize="8" Foreground="{StaticResource Dim}" Margin="0,16,0,2" />
+                            <TextBlock Text="{Binding WheelNowText, StringFormat=WHEEL NOW {0}}" FontSize="8"
+                                       Foreground="{StaticResource Dim}" HorizontalAlignment="Right" Margin="0,-12,0,8" />
+                            <TextBlock Text="Roll the wheel to each stop and set it once." FontSize="10"
+                                       Foreground="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10" />
+
+                            <Grid Margin="0,0,0,6">
+                                <TextBlock Text="FULL NOSE DOWN" FontSize="10" Foreground="{StaticResource Muted}" VerticalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <TextBlock Text="{Binding WheelMinText}" FontSize="11" Foreground="{StaticResource Text}"
+                                               VerticalAlignment="Center" Margin="0,0,10,0" />
+                                    <Button Style="{StaticResource SmallButton}" Content="SET" Click="SetDown_Click" />
+                                </StackPanel>
+                            </Grid>
+                            <Grid>
+                                <TextBlock Text="FULL NOSE UP" FontSize="10" Foreground="{StaticResource Muted}" VerticalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <TextBlock Text="{Binding WheelMaxText}" FontSize="11" Foreground="{StaticResource Text}"
+                                               VerticalAlignment="Center" Margin="0,0,10,0" />
+                                    <Button Style="{StaticResource SmallButton}" Content="SET" Click="SetUp_Click" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Border Height="1" Background="{StaticResource Stroke}" Margin="0,16,0,0" />
+
+                            <TextBlock Text="FEEL" FontSize="8" Foreground="{StaticResource Dim}" Margin="0,16,0,6" />
+                            <Grid>
+                                <TextBlock Text="TRIM SPEED" FontSize="10" Foreground="{StaticResource Muted}" VerticalAlignment="Center" />
+                                <Button Style="{StaticResource SmallButton}" HorizontalAlignment="Right" Click="CycleSpeed_Click">
+                                    <TextBlock Text="{Binding SpeedText}" />
+                                </Button>
+                            </Grid>
+                            <TextBlock Text="Direction is remembered per aircraft." FontSize="9"
+                                       Foreground="{StaticResource Dim}" Margin="0,8,0,0" />
+
+                            <Border Height="1" Background="{StaticResource Stroke}" Margin="0,18,0,0" />
+
+                            <TextBlock Text="WINDOW" FontSize="8" Foreground="{StaticResource Dim}" Margin="0,16,0,6" />
+                            <Grid>
+                                <TextBlock Text="ALWAYS ON TOP" FontSize="10" Foreground="{StaticResource Muted}" VerticalAlignment="Center" />
+                                <ToggleButton Style="{StaticResource Switch}" IsChecked="{Binding Topmost, Mode=TwoWay}"
+                                              HorizontalAlignment="Right" />
+                            </Grid>
+
+                            <Border Height="1" Background="{StaticResource Stroke}" Margin="0,18,0,0" />
+                            <TextBlock Text="ZERO" FontSize="8" Foreground="{StaticResource Dim}" Margin="0,16,0,6" />
+                            <TextBlock FontSize="10" Foreground="{StaticResource Muted}" TextWrapping="Wrap" LineHeight="15">
+                                Park the wheel on the TAKE OFF mark, set the aircraft to takeoff trim,
+                                then press ZERO. Trim Zero adopts both positions. It never moves the aircraft.
+                            </TextBlock>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <Grid Grid.Row="2" Margin="0,8,0,0">
+                        <TextBlock Text="v0.1.0" FontSize="8" Foreground="{StaticResource Dim}" VerticalAlignment="Center" />
+                        <Button Style="{StaticResource SmallButton}" Content="DONE" HorizontalAlignment="Right"
+                                Click="Done_Click" />
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

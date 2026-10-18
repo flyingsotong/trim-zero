@@ -1,0 +1,25 @@
+Trim Zero v0.1.0
+===============
+
+Digital trim for an analogue wheel.
+
+1. Install the .NET 8 Desktop Runtime if you do not have it:
+   https://dotnet.microsoft.com/download/dotnet/8.0
+
+2. In MSFS Controls, clear the Meza's "Elevator Trim Axis" binding.
+   If the sim still binds the axis, the sim and Trim Zero will fight.
+
+3. Run TrimZero.exe.
+
+4. Load a flight. In settings, roll to full nose-down and press SET; roll to full
+   nose-up and press SET. This measures the wheel's real stops.
+
+5. Set the aircraft to takeoff trim, park the wheel on the TAKE OFF mark, press ZERO.
+
+6. Fly. ZERO re-datums at any time. Drift shows when the aircraft has moved away from
+   the mark.
+
+No network, no telemetry, no updater. Settings live in
+%LOCALAPPDATA%\TrimZero\settings.json.
+
+Feedback: alan@magentadebrief.com
