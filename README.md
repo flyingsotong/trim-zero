@@ -5,7 +5,7 @@
 Analogue trim wheel calibration for Microsoft Flight Simulator. Free, Windows 10/11,
 no telemetry, no updater.
 
-[Download the latest release](https://github.com/flyingsotong/trim-zero/releases/latest)
+[Download the latest release](https://github.com/flyingsotong/trim-zero/releases/latest)  ·  [Tip jar](https://magentadebrief.com/donate/) if it earns its place
 
 ![Trim Zero](docs/og.png)
 
