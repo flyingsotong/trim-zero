@@ -39,6 +39,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     private double _ghostPct;
     private double _drift;
     private bool _hasZero;
+    private bool _hasTakeoffDatum;
     private bool _zeroedThisSession;
     private double _takeoffPct = -1;
     private bool _isConnected;
@@ -51,6 +52,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     private bool _isSettingsOpen;
     private bool _invert;
     private bool _topmost = true;
+    private bool _startWithWindows;
     private double _sensitivity = 1.0;
     private double _wheelMin;
     private double _wheelMax = 65535;
@@ -64,9 +66,11 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         _engine.Configure(_settings.WheelMin, _settings.WheelMax, _settings.Sensitivity, _settings.Invert);
         _invert = _settings.Invert;
         _topmost = _settings.Topmost;
+        _startWithWindows = _settings.StartWithWindows;
         _sensitivity = _settings.Sensitivity;
         _wheelMin = _settings.WheelMin;
         _wheelMax = _settings.WheelMax;
+        StartupRegistration.Apply(_settings.StartWithWindows);
 
         _wheel.Sample += _engine.OnWheel;
         _wheel.Changed += OnWheelChanged;
@@ -192,6 +196,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         SimPct = snapshot.SimPct;
         GhostPct = snapshot.GhostPct;
         HasZero = snapshot.HasZero;
+        HasTakeoffDatum = snapshot.HasTakeoffDatum;
         Drift = snapshot.Drift;
         TakeoffPct = snapshot.TakeoffPct;
         WheelNowText = snapshot.WheelCounts.ToString("N0");
@@ -215,12 +220,12 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             StatusText = "AUTOPILOT · WHEEL HELD";
             StatusBrush = AmberBrush;
         }
-        else if (snapshot.HasZero && Math.Abs(snapshot.Drift) > 8.0)
+        else if (snapshot.HasTakeoffDatum && Math.Abs(snapshot.Drift) > 8.0)
         {
             StatusText = "WHEEL OFF DATUM";
             StatusBrush = RedBrush;
         }
-        else if (snapshot.HasZero && Math.Abs(snapshot.Drift) > 1.0)
+        else if (snapshot.HasTakeoffDatum && Math.Abs(snapshot.Drift) > 1.0)
         {
             StatusText = "WHEEL OFF DATUM";
             StatusBrush = AmberBrush;
@@ -386,6 +391,18 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
+    public bool StartWithWindows
+    {
+        get => _startWithWindows;
+        set
+        {
+            if (!Set(ref _startWithWindows, value)) return;
+            _settings.StartWithWindows = value;
+            StartupRegistration.Apply(value);
+            Save();
+        }
+    }
+
     public bool Invert
     {
         get => _invert;
@@ -463,7 +480,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     }
 
     public string SimText => _isConnected || _demo ? _simPct.ToString("0.0") : "—";
-    public string WheelText => _hasZero ? _ghostPct.ToString("0.0") : "—";
+    public string WheelText => !_hasTakeoffDatum ? "—" : _hasZero ? _ghostPct.ToString("0.0") : "—";
     public Visibility NumberVisibility => _isConnected || _demo ? Visibility.Visible : Visibility.Collapsed;
     public Visibility OfflineVisibility => _isConnected || _demo ? Visibility.Collapsed : Visibility.Visible;
     public double GhostPct
@@ -486,7 +503,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
-    public string DriftText => !_hasZero ? "—" : $"{_drift:+0.0;-0.0;0.0}%";
+    public string DriftText => !_hasTakeoffDatum ? "—" : $"{_drift:+0.0;-0.0;0.0}%";
     public Brush DriftBrush => Math.Abs(_drift) > 8.0 ? RedBrush : Math.Abs(_drift) > 1.0 ? AmberBrush : MutedBrush;
     public bool HasZero
     {
@@ -494,6 +511,16 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         private set
         {
             if (!Set(ref _hasZero, value)) return;
+            OnPropertyChanged(nameof(DriftText));
+            OnPropertyChanged(nameof(WheelText));
+        }
+    }
+    public bool HasTakeoffDatum
+    {
+        get => _hasTakeoffDatum;
+        private set
+        {
+            if (!Set(ref _hasTakeoffDatum, value)) return;
             OnPropertyChanged(nameof(DriftText));
             OnPropertyChanged(nameof(WheelText));
         }

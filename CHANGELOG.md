@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 - unreleased
+
+- A new aircraft no longer says WHEEL OFF DATUM before the first ZERO. Drift, the
+  wheel figure and the ghost tick stay hidden until a takeoff datum exists; the status
+  reads READY and the dial prompts PRESS ZERO AT THE MARK.
+- Start with Windows (minimized) setting. It waits for MSFS; no service, no admin, no
+  tray. A second launch restores the running window instead of only showing a message.
+
 ## 0.2.0 - 19 October 2026
 
 - Device picker for any DirectInput analogue wheel, not only the Meza. A device named

@@ -13,6 +13,7 @@ public sealed class AppSettings
     public double WheelMax { get; set; } = 65535;
     public double Sensitivity { get; set; } = 1.0;
     public bool Topmost { get; set; } = true;
+    public bool StartWithWindows { get; set; }
     public double? MarkWheel { get; set; }
     public double? WindowLeft { get; set; }
     public double? WindowTop { get; set; }

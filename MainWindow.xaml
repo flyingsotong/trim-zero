@@ -213,6 +213,13 @@
                                 <ToggleButton Style="{StaticResource Switch}" IsChecked="{Binding Topmost, Mode=TwoWay}"
                                               HorizontalAlignment="Right" />
                             </Grid>
+                            <Grid Margin="0,12,0,0">
+                                <TextBlock Text="START WITH WINDOWS" FontSize="10" Foreground="{StaticResource Muted}" VerticalAlignment="Center" />
+                                <ToggleButton Style="{StaticResource Switch}" IsChecked="{Binding StartWithWindows, Mode=TwoWay}"
+                                              HorizontalAlignment="Right" />
+                            </Grid>
+                            <TextBlock Text="Starts minimized and waits for MSFS." FontSize="9"
+                                       Foreground="{StaticResource Dim}" Margin="0,6,0,0" />
 
                             <Border Height="1" Background="{StaticResource Stroke}" Margin="0,18,0,0" />
                             <TextBlock Text="ZERO" FontSize="8" Foreground="{StaticResource Dim}" Margin="0,16,0,6" />

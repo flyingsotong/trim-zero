@@ -130,7 +130,8 @@ public sealed class TrimDial : FrameworkElement
 
         // Drift between what the wheel claims and what the aircraft says.
         double drift = ghost - sim;
-        if (HasZero && Math.Abs(drift) > 0.6)
+        bool hasDatum = HasZero && TakeoffTrim >= 0;
+        if (hasDatum && Math.Abs(drift) > 0.6)
         {
             var driftPen = MakePen(Color.FromRgb(0xE4, 0x5B, 0x4F), 3, 0.85);
             double a1 = AngleFor(Math.Min(sim, ghost));
@@ -139,7 +140,7 @@ public sealed class TrimDial : FrameworkElement
         }
 
         // Ghost tick.
-        if (HasZero)
+        if (hasDatum)
         {
             double ga = AngleFor(ghost);
             var tickPen = MakePen(Color.FromArgb(0xD0, 0xFF, 0xFF, 0xFF), 2.4);
