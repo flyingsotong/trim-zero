@@ -120,6 +120,7 @@ public sealed class WheelService : IDisposable
             {
                 di.Dispose();
                 SetDevice("No wheel");
+                Changed?.Invoke();
                 return false;
             }
 
@@ -140,6 +141,7 @@ public sealed class WheelService : IDisposable
             {
                 di.Dispose();
                 SetDevice("No wheel");
+                Changed?.Invoke();
                 return false;
             }
 
@@ -153,6 +155,19 @@ public sealed class WheelService : IDisposable
                 .Where(n => !string.IsNullOrWhiteSpace(n))
                 .Select(n => n!)
                 .ToList();
+
+            if (axes.Count == 0)
+            {
+                // A button-only HID (the Meza Switch Panel) is not a trim wheel. Reading
+                // its phantom X axis would just feed a constant 0.
+                try { device.Unacquire(); } catch { }
+                device.Dispose();
+                di.Dispose();
+                _preferredProduct = "";
+                SetDevice("No wheel");
+                Changed?.Invoke();
+                return false;
+            }
 
             var name = NameOf(chosen);
             _preferredProduct = name;
