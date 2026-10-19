@@ -100,6 +100,8 @@ public partial class MainWindow : Window
 
     private void CycleAxis_Click(object sender, RoutedEventArgs e) => _vm.CycleAxis();
 
+    private void CycleDevice_Click(object sender, RoutedEventArgs e) => _vm.CycleDevice();
+
     private void SetDown_Click(object sender, RoutedEventArgs e) => _vm.SetTravelDown();
 
     private void SetUp_Click(object sender, RoutedEventArgs e) => _vm.SetTravelUp();

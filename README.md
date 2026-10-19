@@ -7,8 +7,8 @@ no telemetry, no updater.
 
 [Download the latest release](https://github.com/flyingsotong/trim-zero/releases/latest)  ·  [Source](https://github.com/flyingsotong/trim-zero)  ·  [Tip jar](https://magentadebrief.com/donate/) if it earns its place
 
-> v0.2.0 is in development: the tip jar and per-aircraft takeoff memory. The current
-> release is v0.1.0.
+> v0.2.0 is in development: the tip jar, per-aircraft takeoff memory and a device picker
+> for any DirectInput analogue wheel. The current release is v0.1.0.
 
 ![Trim Zero](docs/og.png)
 
@@ -47,12 +47,10 @@ arc, and a visible drift when the aircraft and the box disagree.
 
 ## Supported wheels
 
-Analogue axis wheels only:
-
-- Meza Trim (the target device)
-- Saitek / Logitech trim wheel
-- Desktop Pilot trim wheel
-- Any DIY analogue wheel that appears as a DirectInput axis
+Any manual trim wheel that appears as a DirectInput axis. The Meza Trim is the tested
+device; Trim Zero lists every attached game controller under **DEVICE**, so Saitek /
+Logitech, Desktop Pilot and DIY wheels can be selected too. It does not assume the wheel
+is a Meza.
 
 Not supported: encoder wheels such as the Honeycomb Bravo or Sierra. They send button
 steps, not an axis.
@@ -79,14 +77,17 @@ Substitute the file name you actually downloaded.
 
 ## Setup
 
-1. In MSFS Controls, clear the Meza's **Elevator Trim Axis** binding. Two writers will
+1. In MSFS Controls, clear your wheel's **Elevator Trim Axis** binding. Two writers will
    fight if the sim still binds the axis.
-2. Start the sim and load a flight.
-3. In Trim Zero's settings, roll to full nose-down and press **SET**; roll to full
-   nose-up and press **SET**. This measures the wheel's real stops.
-4. Set the aircraft to takeoff trim, park the wheel on the TAKE OFF mark, press
+2. In Trim Zero's settings, choose your wheel under **DEVICE**, then the trim axis under
+   **AXIS**. The app auto-detects a device named Meza or Trim; anything else is one
+   click away.
+3. Start the sim and load a flight.
+4. In settings, roll to full nose-down and press **SET**; roll to full nose-up and press
+   **SET**. This measures the wheel's real stops.
+5. Set the aircraft to takeoff trim, park the wheel on the TAKE OFF mark, press
    **ZERO**.
-5. Fly. ZERO re-datums at any time; the drift tells you when to.
+6. Fly. ZERO re-datums at any time; the drift tells you when to.
 
 ## How it writes trim
 
@@ -103,9 +104,10 @@ readable but a data write is ignored; POSITION is the control.
 ## Status
 
 v0.1.0, October 2026. Verified against MSFS 2024 1.9.20.0 and the C172SP for the sim
-read, aircraft title, ZERO, drift and position writes. The full hand-driven pass is in
-progress. Other aircraft use the same neutral and limit variables; please report
-differences.
+read, aircraft title, ZERO, drift and position writes. The Meza is the tested wheel;
+other DirectInput analogue wheels are selected in settings, and reports are welcome.
+The full hand-driven pass is in progress. Other aircraft use the same neutral and limit
+variables; please report differences.
 
 ## Privacy
 

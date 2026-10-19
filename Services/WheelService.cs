@@ -21,9 +21,10 @@ public sealed class WheelService : IDisposable
     private Thread? _thread;
     private volatile bool _running;
     private IntPtr _hwnd;
-    private string _preferredProduct = "Meza Trim";
+    private string _preferredProduct = "";
     private string _axisName = "X Axis";
     private readonly List<string> _axes = new();
+    private readonly List<string> _devices = new();
 
     public event Action<int>? Sample;
     public event Action? Changed;
@@ -32,16 +33,28 @@ public sealed class WheelService : IDisposable
     public string AxisName => _axisName;
     public bool IsConnected { get { lock (_gate) return _device is not null; } }
     public IReadOnlyList<string> AxisNames { get { lock (_gate) return _axes.ToArray(); } }
+    public IReadOnlyList<string> DeviceNames { get { lock (_gate) return _devices.ToArray(); } }
 
     public void Start(IntPtr hwnd, string product, string axisName)
     {
         _hwnd = hwnd;
-        _preferredProduct = string.IsNullOrWhiteSpace(product) ? "Meza Trim" : product;
+        _preferredProduct = product?.Trim() ?? "";
         _axisName = string.IsNullOrWhiteSpace(axisName) ? "X Axis" : axisName;
         _running = true;
         TimeBeginPeriod(1);
         _thread = new Thread(PollLoop) { IsBackground = true, Name = "TrimZero.Wheel" };
         _thread.Start();
+    }
+
+    public void CycleDevice()
+    {
+        lock (_gate)
+        {
+            if (_devices.Count == 0) return;
+            int i = _devices.FindIndex(d => string.Equals(d, DeviceName, StringComparison.OrdinalIgnoreCase));
+            _preferredProduct = _devices[(i + 1 + _devices.Count) % _devices.Count];
+        }
+        DropDevice();
     }
 
     public void CycleAxis()
@@ -90,8 +103,19 @@ public sealed class WheelService : IDisposable
         {
             var di = DInput.DirectInput8Create();
             var devices = di.GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
-                .OrderByDescending(d => Matches(d))
+                .OrderBy(NameOf, StringComparer.OrdinalIgnoreCase)
                 .ToList();
+
+            var names = devices.Select(NameOf)
+                .Where(n => !string.IsNullOrWhiteSpace(n))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            lock (_gate)
+            {
+                _devices.Clear();
+                _devices.AddRange(names);
+            }
+
             if (devices.Count == 0)
             {
                 di.Dispose();
@@ -99,13 +123,27 @@ public sealed class WheelService : IDisposable
                 return false;
             }
 
-            var chosen = devices.FirstOrDefault(Matches);
+            DeviceInstance? chosen;
+            if (!string.IsNullOrWhiteSpace(_preferredProduct))
+            {
+                chosen = devices.FirstOrDefault(Matches);
+            }
+            else
+            {
+                // First run: prefer a device that calls itself a trim wheel. Everything
+                // else is listed in settings for the user to choose.
+                chosen = devices.FirstOrDefault(d =>
+                    NameOf(d).Contains("Meza", StringComparison.OrdinalIgnoreCase) ||
+                    NameOf(d).Contains("Trim", StringComparison.OrdinalIgnoreCase));
+            }
+
             if (chosen is null)
             {
                 di.Dispose();
                 SetDevice("No wheel");
                 return false;
             }
+
             var device = di.CreateDevice(chosen.InstanceGuid);
             device.SetDataFormat<RawJoystickState>();
             device.SetCooperativeLevel(_hwnd, CooperativeLevel.NonExclusive | CooperativeLevel.Background);
@@ -117,6 +155,9 @@ public sealed class WheelService : IDisposable
                 .Select(n => n!)
                 .ToList();
 
+            var name = NameOf(chosen);
+            _preferredProduct = name;
+
             lock (_gate)
             {
                 _di = di;
@@ -127,7 +168,7 @@ public sealed class WheelService : IDisposable
                     _axisName = axes[0];
             }
 
-            SetDevice(chosen.InstanceName?.Trim() ?? chosen.ProductName?.Trim() ?? "Wheel");
+            SetDevice(name);
             return true;
         }
         catch
@@ -140,6 +181,16 @@ public sealed class WheelService : IDisposable
     {
         var name = (d.InstanceName ?? "") + " " + (d.ProductName ?? "");
         return name.Contains(_preferredProduct, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string NameOf(DeviceInstance d)
+    {
+        // Product name first: it is stable across USB ports. Instance name is the
+        // fallback for devices that do not report a product string.
+        var name = d.ProductName?.Trim();
+        if (!string.IsNullOrWhiteSpace(name)) return name;
+        name = d.InstanceName?.Trim();
+        return string.IsNullOrWhiteSpace(name) ? "Wheel" : name;
     }
 
     private static int ReadAxis(JoystickState s, string name)

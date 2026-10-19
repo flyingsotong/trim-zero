@@ -6,7 +6,7 @@ namespace TrimZero.Core;
 public sealed class AppSettings
 {
     public int Version { get; set; } = 2;
-    public string DeviceProduct { get; set; } = "Meza Trim";
+    public string DeviceProduct { get; set; } = "";
     public string AxisName { get; set; } = "X Axis";
     public bool Invert { get; set; }
     public double WheelMin { get; set; } = 0;

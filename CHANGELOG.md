@@ -2,6 +2,8 @@
 
 ## 0.2.0 - unreleased
 
+- Device picker for any DirectInput analogue wheel, not only the Meza. A device named
+  Meza or Trim is auto-detected; anything else is selected under DEVICE in settings.
 - Tip jar link in the settings footer, next to the version. It opens
   https://magentadebrief.com/donate/ in the default browser.
 - Direction and the takeoff datum are remembered per aircraft. Switching to a known

@@ -46,7 +46,8 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     private string _statusText = "WAITING FOR MSFS";
     private Brush _statusBrush = MutedBrush;
     private string _aircraftText = "NO AIRCRAFT";
-    private string _deviceText = "NO WHEEL";
+    private string _deviceNameText = "NO WHEEL";
+    private string _axisText = "X AXIS";
     private bool _isSettingsOpen;
     private bool _invert;
     private bool _topmost = true;
@@ -78,7 +79,8 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         if (_demo)
         {
             _engine.OnWheel(36053);
-            DeviceText = "MEZA TRIM · X AXIS";
+            DeviceNameText = "MEZA TRIM";
+            AxisText = "X AXIS";
             _aircraft = "CESSNA 172 SKYHAWK";
             AircraftText = _aircraft;
         }
@@ -102,15 +104,27 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
     private void RefreshDevice()
     {
-        DeviceText = _wheel.DeviceName == "No wheel"
+        DeviceNameText = _wheel.DeviceName == "No wheel"
             ? "NO WHEEL"
-            : $"{_wheel.DeviceName.ToUpperInvariant()} · {_wheel.AxisName.ToUpperInvariant()}";
+            : _wheel.DeviceName.ToUpperInvariant();
+        AxisText = _wheel.AxisName.ToUpperInvariant();
         OnPropertyChanged(nameof(HasMultipleAxes));
+        OnPropertyChanged(nameof(HasMultipleDevices));
         OnPropertyChanged(nameof(CanZero));
         OnPropertyChanged(nameof(DatumChipVisibility));
+
+        if (_wheel.DeviceName != "No wheel" &&
+            (!string.Equals(_settings.DeviceProduct, _wheel.DeviceName, StringComparison.OrdinalIgnoreCase) ||
+             !string.Equals(_settings.AxisName, _wheel.AxisName, StringComparison.OrdinalIgnoreCase)))
+        {
+            _settings.DeviceProduct = _wheel.DeviceName;
+            _settings.AxisName = _wheel.AxisName;
+            Save();
+        }
     }
 
     public bool HasMultipleAxes => _wheel.AxisNames.Count > 1;
+    public bool HasMultipleDevices => _wheel.DeviceNames.Count > 0;
     public bool CanZero => _isConnected && (_demo || _wheel.IsConnected);
 
     private void OnSimState(SimState state)
@@ -328,6 +342,13 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         Save();
     }
 
+    public void CycleDevice()
+    {
+        _wheel.CycleDevice();
+        RefreshDevice();
+        Save();
+    }
+
     public bool SensitivitySlow => Math.Abs(_sensitivity - 0.6) < 0.01;
     public bool SensitivityNormal => Math.Abs(_sensitivity - 1.0) < 0.01;
     public bool SensitivityFast => Math.Abs(_sensitivity - 1.6) < 0.01;
@@ -512,7 +533,8 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     public string StatusText { get => _statusText; private set => Set(ref _statusText, value); }
     public Brush StatusBrush { get => _statusBrush; private set => Set(ref _statusBrush, value); }
     public string AircraftText { get => _aircraftText; private set => Set(ref _aircraftText, value); }
-    public string DeviceText { get => _deviceText; private set => Set(ref _deviceText, value); }
+    public string DeviceNameText { get => _deviceNameText; private set => Set(ref _deviceNameText, value); }
+    public string AxisText { get => _axisText; private set => Set(ref _axisText, value); }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

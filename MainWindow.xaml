@@ -145,12 +145,27 @@
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,6,0,6">
                         <StackPanel>
                             <TextBlock Text="WHEEL" FontSize="8" Foreground="{StaticResource Dim}" Margin="0,8,0,6" />
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding DeviceNameText}" FontSize="12"
+                                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
+                                <Button Grid.Column="1" Style="{StaticResource SmallButton}" Content="DEVICE  ›"
+                                        IsEnabled="{Binding HasMultipleDevices}" Click="CycleDevice_Click" />
+                            </Grid>
                             <Grid>
-                                <TextBlock Text="{Binding DeviceText}" FontSize="12" VerticalAlignment="Center" />
-                                <Button Style="{StaticResource SmallButton}" Content="AXIS  ›" HorizontalAlignment="Right"
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding AxisText}" FontSize="12"
+                                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
+                                <Button Grid.Column="1" Style="{StaticResource SmallButton}" Content="AXIS  ›"
                                         IsEnabled="{Binding HasMultipleAxes}" Click="CycleAxis_Click" />
                             </Grid>
-                            <TextBlock Text="Clear the Meza's Elevator Trim Axis binding in MSFS Controls. Two writers will fight."
+                            <TextBlock Text="Clear your trim wheel's Elevator Trim Axis binding in MSFS Controls. Two writers will fight."
                                        FontSize="9" Foreground="{StaticResource Amber}" TextWrapping="Wrap" Margin="0,8,0,0" />
 
                             <Border Height="1" Background="{StaticResource Stroke}" Margin="0,16,0,0" />
