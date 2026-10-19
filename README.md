@@ -7,8 +7,8 @@ no telemetry, no updater.
 
 [Download the latest release](https://github.com/flyingsotong/trim-zero/releases/latest)  ·  [Source](https://github.com/flyingsotong/trim-zero)  ·  [Tip jar](https://magentadebrief.com/donate/) if it earns its place
 
-> v0.2.0, October 2026: any DirectInput analogue wheel, per-aircraft takeoff memory,
-> and the tip jar in settings.
+> v0.2.1, October 2026: start with Windows, a new-aircraft prompt fix, and a device guard
+> that cannot mistake a switch panel for the trim wheel.
 
 ![Trim Zero](docs/og.png)
 
@@ -35,6 +35,8 @@ arc, and a visible drift when the aircraft and the box disagree.
   aircraft; switching back restores them without moving the aircraft.
 - **Autopilot clutch.** The wheel is inert while the autopilot is flying; on disconnect
   the control reseeds but the datum is kept, so the mark does not silently lie.
+- **Start with Windows.** Optional; starts minimized and waits for MSFS. No service, no
+  admin, no tray.
 - One 400 x 632 window. No tray, no updater, no telemetry, no network.
 
 ## Screenshots
@@ -103,12 +105,14 @@ readable but a data write is ignored; POSITION is the control.
 
 ## Status
 
-v0.2.0, October 2026. Verified against MSFS 2024 1.9.20.0 and the C172SP for the sim
-read, aircraft title, ZERO, drift and position writes. The Meza is the tested wheel;
-other DirectInput analogue wheels are selected under DEVICE and AXIS, and reports are
-welcome. The per-aircraft datum is unit-tested; the live two-aircraft switch and the
-full hand-driven pass are still to be done. Other aircraft use the same neutral and
-limit variables; please report differences.
+v0.2.1, October 2026. Verified against MSFS 2024 1.9.20.0 and the C172SP for the sim
+read, aircraft title, ZERO, drift and position writes. The C172 hand-driven pass and
+the AP clutch passed with the native binding cleared. The A32 Vixxen path and the
+return to the C172 work; the per-aircraft datum and direction restore. The Meza is the
+tested wheel; other DirectInput analogue wheels are selected under DEVICE and AXIS, and
+reports are welcome. Start with Windows is implemented and the minimized/single-instance
+path is tested; the full logout/login cycle is still to be verified. Other aircraft use
+the same neutral and limit variables; please report differences.
 
 ## Privacy
 

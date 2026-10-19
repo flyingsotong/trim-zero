@@ -1,4 +1,4 @@
-Trim Zero v0.2.0
+Trim Zero v0.2.1
 ===============
 
 Digital trim for an analogue wheel.
