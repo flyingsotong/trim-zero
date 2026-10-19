@@ -2,6 +2,7 @@
 
 ## 0.2.2 - unreleased
 
+- Esc closes the settings panel and returns to the main screen.
 - Magenta Debrief maker's mark in the settings About section, linking to
   https://magentadebrief.com. The app's instrument colours are unchanged.
 - README footer with the Magenta lockup in light and dark variants; the Magenta marks

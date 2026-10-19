@@ -98,6 +98,15 @@ public partial class MainWindow : Window
 
     private void Done_Click(object sender, RoutedEventArgs e) => _vm.IsSettingsOpen = false;
 
+    private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape && _vm.IsSettingsOpen)
+        {
+            _vm.IsSettingsOpen = false;
+            e.Handled = true;
+        }
+    }
+
     private void CycleAxis_Click(object sender, RoutedEventArgs e) => _vm.CycleAxis();
 
     private void CycleDevice_Click(object sender, RoutedEventArgs e) => _vm.CycleDevice();

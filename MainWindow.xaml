@@ -10,6 +10,7 @@
         Background="{StaticResource Bg}"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
+        PreviewKeyDown="Window_PreviewKeyDown"
         Topmost="{Binding Topmost}"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True"
