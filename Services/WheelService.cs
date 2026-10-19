@@ -130,10 +130,9 @@ public sealed class WheelService : IDisposable
             }
             else
             {
-                // First run: prefer a device that calls itself a trim wheel. Everything
-                // else is listed in settings for the user to choose.
+                // First run: only auto-pick a device that calls itself a trim wheel.
+                // A "Meza Switch Panel" also contains "Meza"; it must not win.
                 chosen = devices.FirstOrDefault(d =>
-                    NameOf(d).Contains("Meza", StringComparison.OrdinalIgnoreCase) ||
                     NameOf(d).Contains("Trim", StringComparison.OrdinalIgnoreCase));
             }
 

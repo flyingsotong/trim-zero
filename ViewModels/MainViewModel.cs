@@ -121,6 +121,21 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             (!string.Equals(_settings.DeviceProduct, _wheel.DeviceName, StringComparison.OrdinalIgnoreCase) ||
              !string.Equals(_settings.AxisName, _wheel.AxisName, StringComparison.OrdinalIgnoreCase)))
         {
+            bool hadDevice = !string.IsNullOrWhiteSpace(_settings.DeviceProduct);
+            bool deviceChanged = hadDevice &&
+                !string.Equals(_settings.DeviceProduct, _wheel.DeviceName, StringComparison.OrdinalIgnoreCase);
+            bool axisChanged = !string.Equals(_settings.AxisName, _wheel.AxisName, StringComparison.OrdinalIgnoreCase);
+
+            if (deviceChanged || (hadDevice && axisChanged))
+            {
+                // The mark is a count on one device axis. Switching either invalidates
+                // it; do not restore a datum recorded from another wheel.
+                _settings.MarkWheel = null;
+                _engine.ResetToAircraft();
+                _zeroedThisSession = false;
+                NotifyDatumChip();
+            }
+
             _settings.DeviceProduct = _wheel.DeviceName;
             _settings.AxisName = _wheel.AxisName;
             Save();

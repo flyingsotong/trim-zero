@@ -2,6 +2,9 @@
 
 ## 0.2.1 - unreleased
 
+- Device auto-detect now only picks a device whose name contains "Trim". A Meza
+  Switch Panel or a joystick no longer wins by containing "Meza". Changing the device
+  or axis clears the saved takeoff datum, because the mark is a count on that axis.
 - A new aircraft no longer says WHEEL OFF DATUM before the first ZERO. Drift, the
   wheel figure and the ghost tick stay hidden until a takeoff datum exists; the status
   reads READY and the dial prompts PRESS ZERO AT THE MARK.
