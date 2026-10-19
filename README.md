@@ -42,12 +42,9 @@ arc, and a visible drift when the aircraft and the box disagree.
 
 ## Supported wheels
 
-Analogue axis wheels only:
-
-- Meza Trim (the target device)
-- Saitek / Logitech trim wheel
-- Desktop Pilot trim wheel
-- Any DIY analogue wheel that appears as a DirectInput axis
+Meza Trim is the tested and supported device in v0.1.0. The upcoming v0.2 build adds a
+device picker for other DirectInput analogue wheels: Saitek/Logitech, Desktop Pilot and
+DIY wheels.
 
 Not supported: encoder wheels such as the Honeycomb Bravo or Sierra. They send button
 steps, not an axis.
