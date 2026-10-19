@@ -227,6 +227,18 @@
                                 Park the wheel on the TAKE OFF mark, set the aircraft to takeoff trim,
                                 then press ZERO. Trim Zero adopts both positions. It never moves the aircraft.
                             </TextBlock>
+
+                            <Border Height="1" Background="{StaticResource Stroke}" Margin="0,18,0,0" />
+                            <TextBlock Text="ABOUT" FontSize="8" Foreground="{StaticResource Dim}" Margin="0,16,0,6" />
+                            <Image Source="Assets/magenta-lockup-dark.png" Width="120" Height="19"
+                                   HorizontalAlignment="Left" Cursor="Hand" ToolTip="magentadebrief.com"
+                                   MouseLeftButtonUp="Magenta_Click"
+                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                            <TextBlock Text="A Magenta Debrief tool. Free, no telemetry." FontSize="9"
+                                       Foreground="{StaticResource Muted}" Margin="0,8,0,0" />
+                            <TextBlock Text="magentadebrief.com" FontSize="9"
+                                       Foreground="{StaticResource Brush.Link}" TextDecorations="Underline"
+                                       Cursor="Hand" MouseLeftButtonUp="Magenta_Click" Margin="0,4,0,0" />
                         </StackPanel>
                     </ScrollViewer>
 

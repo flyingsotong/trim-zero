@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.2 - unreleased
+
+- Magenta Debrief maker's mark in the settings About section, linking to
+  https://magentadebrief.com. The app's instrument colours are unchanged.
+- README footer with the Magenta lockup in light and dark variants; the Magenta marks
+  are recorded as trademarks, not MIT.
+
 ## 0.2.1 - 19 October 2026
 
 - Device auto-detect now only picks a device whose name contains "Trim". A Meza

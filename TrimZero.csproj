@@ -9,7 +9,7 @@
     <AssemblyName>TrimZero</AssemblyName>
     <RootNamespace>TrimZero</RootNamespace>
     <PlatformTarget>x64</PlatformTarget>
-    <Version>0.2.1</Version>
+    <Version>0.2.2</Version>
     <Company>Alan Soon</Company>
     <Product>Trim Zero</Product>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Resource Include="Assets\trimzero.ico" />
+    <Resource Include="Assets\magenta-lockup-dark.png" />
   </ItemGroup>
 
   <PropertyGroup>

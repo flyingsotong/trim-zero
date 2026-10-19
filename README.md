@@ -127,8 +127,22 @@ can leave something in the tip jar: https://magentadebrief.com/donate/
 
 ## License
 
-MIT. Not affiliated with Meza or Microsoft.
+MIT. Not affiliated with Meza or Microsoft. Trim Zero is a Magenta Debrief project.
 
 ## Feedback
 
 alan@magentadebrief.com
+
+---
+
+<p align="center">
+  <a href="https://magentadebrief.com">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="docs/magenta-lockup-dark.png">
+      <img src="docs/magenta-lockup-light.png" alt="Magenta Debrief" width="200">
+    </picture>
+  </a>
+</p>
+
+The Magenta Debrief name and logo are trademarks of Magenta Debrief and are not covered
+by the MIT licence.

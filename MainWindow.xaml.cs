@@ -114,6 +114,9 @@ public partial class MainWindow : Window
     private void Donate_Click(object sender, MouseButtonEventArgs e) =>
         OpenUrl("https://magentadebrief.com/donate/");
 
+    private void Magenta_Click(object sender, MouseButtonEventArgs e) =>
+        OpenUrl("https://magentadebrief.com");
+
     private static void OpenUrl(string url)
     {
         try
