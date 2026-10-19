@@ -1,4 +1,4 @@
-Trim Zero v0.1.0
+Trim Zero v0.2.0
 ===============
 
 Digital trim for an analogue wheel.
@@ -11,12 +11,14 @@ Digital trim for an analogue wheel.
 
 3. Run TrimZero.exe.
 
-4. Load a flight. In settings, roll to full nose-down and press SET; roll to full
+4. In settings, choose your wheel under DEVICE and the trim axis under AXIS.
+
+5. Load a flight. In settings, roll to full nose-down and press SET; roll to full
    nose-up and press SET. This measures the wheel's real stops.
 
-5. Set the aircraft to takeoff trim, park the wheel on the TAKE OFF mark, press ZERO.
+6. Set the aircraft to takeoff trim, park the wheel on the TAKE OFF mark, press ZERO.
 
-6. Fly. ZERO re-datums at any time. Drift shows when the aircraft has moved away from
+7. Fly. ZERO re-datums at any time. Drift shows when the aircraft has moved away from
    the mark.
 
 No network, no telemetry, no updater. Settings live in
