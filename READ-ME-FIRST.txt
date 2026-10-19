@@ -6,8 +6,8 @@ Digital trim for an analogue wheel.
 1. Install the .NET 8 Desktop Runtime if you do not have it:
    https://dotnet.microsoft.com/download/dotnet/8.0
 
-2. In MSFS Controls, clear the Meza's "Elevator Trim Axis" binding.
-   If the sim still binds the axis, the sim and Trim Zero will fight.
+2. In MSFS Controls, clear the binding on your wheel's own "Elevator Trim Axis"
+   action. If the sim still binds the axis, the sim and Trim Zero will fight.
 
 3. Run TrimZero.exe.
 
