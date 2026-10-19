@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 - unreleased
+## 0.2.0 - 19 October 2026
 
 - Device picker for any DirectInput analogue wheel, not only the Meza. A device named
   Meza or Trim is auto-detected; anything else is selected under DEVICE in settings.

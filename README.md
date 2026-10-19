@@ -7,8 +7,8 @@ no telemetry, no updater.
 
 [Download the latest release](https://github.com/flyingsotong/trim-zero/releases/latest)  ·  [Source](https://github.com/flyingsotong/trim-zero)  ·  [Tip jar](https://magentadebrief.com/donate/) if it earns its place
 
-> v0.2.0 is in development: the tip jar, per-aircraft takeoff memory and a device picker
-> for any DirectInput analogue wheel. The current release is v0.1.0.
+> v0.2.0, October 2026: any DirectInput analogue wheel, per-aircraft takeoff memory,
+> and the tip jar in settings.
 
 ![Trim Zero](docs/og.png)
 
@@ -103,11 +103,12 @@ readable but a data write is ignored; POSITION is the control.
 
 ## Status
 
-v0.1.0, October 2026. Verified against MSFS 2024 1.9.20.0 and the C172SP for the sim
+v0.2.0, October 2026. Verified against MSFS 2024 1.9.20.0 and the C172SP for the sim
 read, aircraft title, ZERO, drift and position writes. The Meza is the tested wheel;
-other DirectInput analogue wheels are selected in settings, and reports are welcome.
-The full hand-driven pass is in progress. Other aircraft use the same neutral and limit
-variables; please report differences.
+other DirectInput analogue wheels are selected under DEVICE and AXIS, and reports are
+welcome. The per-aircraft datum is unit-tested; the live two-aircraft switch and the
+full hand-driven pass are still to be done. Other aircraft use the same neutral and
+limit variables; please report differences.
 
 ## Privacy
 
