@@ -44,6 +44,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     private double _takeoffPct = -1;
     private bool _isConnected;
     private bool _apOn;
+    private bool _onGround;
     private string _statusText = "WAITING FOR MSFS";
     private Brush _statusBrush = MutedBrush;
     private string _aircraftText = "NO AIRCRAFT";
@@ -57,12 +58,17 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     private double _wheelMin;
     private double _wheelMax = 65535;
     private string _wheelNowText = "—";
+    private string _travelHint = "";
 
     public MainViewModel(bool demo, bool nudge = false)
     {
         _demo = demo;
         _nudge = nudge;
         _settings = SettingsStore.Load();
+        // 0.2.x shipped a 1.6 preset that outran the wheel's travel and left the top
+        // of the wheel dead. The ladder is capped at full range now, so clamp a saved
+        // value above it rather than restoring the dead zone.
+        if (_settings.Sensitivity > 1.0) _settings.Sensitivity = 1.0;
         _engine.Configure(_settings.WheelMin, _settings.WheelMax, _settings.Sensitivity, _settings.Invert);
         _invert = _settings.Invert;
         _topmost = _settings.Topmost;
@@ -152,6 +158,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         _engine.OnSim(state.Pct, state.ApMaster, state.Connected);
         IsConnected = state.Connected;
         ApOn = state.ApMaster;
+        _onGround = state.OnGround;
 
         if (!wasConnected && state.Connected)
         {
@@ -254,7 +261,19 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
     public void Zero()
     {
-        _engine.Zero();
+        // The takeoff reference is a ground fact: the wheel is on its mark and the
+        // aircraft is at takeoff trim. In flight ZERO only re-datums the wheel, so
+        // pressing it in cruise cannot move the takeoff band or overwrite the mark
+        // that was saved from the ground.
+        bool markTakeoff = _onGround;
+        _engine.Zero(markTakeoff);
+
+        if (!markTakeoff)
+        {
+            NotifyDatumChip();
+            return;
+        }
+
         var snapshot = _engine.GetSnapshot();
         if (!snapshot.HasTakeoffDatum) return;
 
@@ -317,7 +336,12 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             _settings.WheelMin = counts;
             WheelMin = counts;
             _engine.SetTravel(_settings.WheelMin, _settings.WheelMax);
+            TravelHint = "";
             Save();
+        }
+        else
+        {
+            TravelHint = "That is the nose-up end. Roll to full nose-down and set again.";
         }
     }
 
@@ -329,12 +353,20 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             _settings.WheelMax = counts;
             WheelMax = counts;
             _engine.SetTravel(_settings.WheelMin, _settings.WheelMax);
+            TravelHint = "";
             Save();
+        }
+        else
+        {
+            TravelHint = "That is the nose-down end. Roll to full nose-up and set again.";
         }
     }
 
     public void SetSpeed(double value)
     {
+        // Never above full range: a gain over 1.0 reaches the trim limit before the
+        // wheel reaches its stop, and the rest of the wheel does nothing.
+        value = Math.Clamp(value, 0.2, 1.0);
         Sensitivity = value;
         _settings.Sensitivity = value;
         _engine.SetSensitivity(value);
@@ -347,12 +379,12 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
     public void CycleSpeed()
     {
-        double next = _sensitivity < 0.8 ? 1.0 : _sensitivity < 1.3 ? 1.6 : 0.6;
+        double next = _sensitivity < 0.7 ? 0.8 : _sensitivity < 0.9 ? 1.0 : 0.6;
         SetSpeed(next);
     }
 
     public string SpeedText => Math.Abs(_sensitivity - 0.6) < 0.01 ? "SLOW"
-        : Math.Abs(_sensitivity - 1.6) < 0.01 ? "FAST" : "NORMAL";
+        : Math.Abs(_sensitivity - 1.0) < 0.01 ? "FAST" : "NORMAL";
 
     public void CycleAxis()
     {
@@ -370,8 +402,8 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     }
 
     public bool SensitivitySlow => Math.Abs(_sensitivity - 0.6) < 0.01;
-    public bool SensitivityNormal => Math.Abs(_sensitivity - 1.0) < 0.01;
-    public bool SensitivityFast => Math.Abs(_sensitivity - 1.6) < 0.01;
+    public bool SensitivityNormal => Math.Abs(_sensitivity - 0.8) < 0.01;
+    public bool SensitivityFast => Math.Abs(_sensitivity - 1.0) < 0.01;
 
     private void Save() => SettingsStore.Save(_settings);
 
@@ -426,7 +458,10 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
     private void ApplyInvert(bool value, bool remember)
     {
-        Set(ref _invert, value);
+        // Name the property explicitly: CallerMemberName would report "ApplyInvert",
+        // so the switch never heard the change and could show one state while the
+        // engine ran the other.
+        Set(ref _invert, value, nameof(Invert));
         _engine.SetInvert(value);
         if (!remember) return;
 
@@ -483,6 +518,17 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     public string WheelMinText => $"{_wheelMin:0}";
     public string WheelMaxText => $"{_wheelMax:0}";
     public string WheelNowText { get => _wheelNowText; private set => Set(ref _wheelNowText, value); }
+    public string TravelHint
+    {
+        get => _travelHint;
+        private set
+        {
+            if (!Set(ref _travelHint, value)) return;
+            OnPropertyChanged(nameof(TravelHintVisibility));
+        }
+    }
+    public Visibility TravelHintVisibility =>
+        string.IsNullOrEmpty(_travelHint) ? Visibility.Collapsed : Visibility.Visible;
 
     public double SimPct
     {

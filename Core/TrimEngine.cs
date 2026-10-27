@@ -153,9 +153,15 @@ public sealed class TrimEngine
         }
     }
 
-    public void Zero()
+    /// <summary>
+    /// Take the wheel's current position as the datum. A takeoff reference is only
+    /// recorded when the caller asks for it, because it is a ground fact: the wheel
+    /// is on its mark and the aircraft is at takeoff trim. Passing false re-datums
+    /// the wheel and leaves the takeoff band and the saved mark alone.
+    /// </summary>
+    public void Zero(bool markTakeoff = true)
     {
-        lock (_gate) ZeroLocked(markTakeoff: true);
+        lock (_gate) ZeroLocked(markTakeoff);
     }
 
     /// <summary>
@@ -250,8 +256,12 @@ public sealed class TrimEngine
         if (!_hasZero || _zeroWheel <= _wheelMin + 1 || _zeroWheel >= _wheelMax - 1)
             return defaultGain * _sensitivity;
 
-        bool up = counts >= _zeroWheel;
-        double physical = up ? _wheelMax - _zeroWheel : _zeroWheel - _wheelMin;
+        // Which side of the datum this count is on depends on which way the axis
+        // runs: inverted, turning nose-up lowers the count, so the two sides swap.
+        bool up = _invert ? counts <= _zeroWheel : counts >= _zeroWheel;
+        double upTravel = _invert ? _zeroWheel - _wheelMin : _wheelMax - _zeroWheel;
+        double downTravel = _invert ? _wheelMax - _zeroWheel : _zeroWheel - _wheelMin;
+        double physical = up ? upTravel : downTravel;
         double trim = up ? 100.0 - _zeroTrim : _zeroTrim;
         if (physical < 100) return defaultGain * _sensitivity;
 

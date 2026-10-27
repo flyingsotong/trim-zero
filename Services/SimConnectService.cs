@@ -4,7 +4,7 @@ using Microsoft.FlightSimulator.SimConnect;
 
 namespace TrimZero.Services;
 
-public readonly record struct SimState(double Pct, bool ApMaster, bool Connected, string Aircraft);
+public readonly record struct SimState(double Pct, bool ApMaster, bool Connected, string Aircraft, bool OnGround);
 
 /// <summary>
 /// Owns the SimConnect conversation. The writable variable is
@@ -48,6 +48,10 @@ public sealed class SimConnectService : IDisposable
     private HwndSource? _source;
     private IntPtr _hwnd;
     private bool _ap;
+    // Assume the ground until SIM ON GROUND says otherwise. The whole setup
+    // procedure is a ground procedure, and the request is on a one-second period,
+    // so a wrong guess is corrected within a second of connecting.
+    private bool _onGround = true;
     private bool _connected;
     private bool _hasTrim;
     private bool _hasLimits;
@@ -163,6 +167,7 @@ public sealed class SimConnectService : IDisposable
             _connected = true;
             _hasTrim = false;
             _ap = false;
+            _onGround = true;
             RequestData();
         }
         else if (data.uEventID == (uint)Event.SimStop)
@@ -194,6 +199,12 @@ public sealed class SimConnectService : IDisposable
             case Definition.ApMaster:
                 _ap = ((IntValue)data.dwData[0]).Value != 0;
                 if (_hasTrim) Raise();
+                break;
+
+            case Definition.OnGround:
+                // Read when ZERO is pressed, so a second-period frame does not have
+                // to repaint the window.
+                _onGround = ((IntValue)data.dwData[0]).Value != 0;
                 break;
 
             case Definition.Title:
@@ -230,7 +241,7 @@ public sealed class SimConnectService : IDisposable
         }
     }
 
-    private void Raise() => StateChanged?.Invoke(new SimState(Pct, _ap, _connected, _aircraft));
+    private void Raise() => StateChanged?.Invoke(new SimState(Pct, _ap, _connected, _aircraft, _onGround));
 
     private void Disconnect()
     {

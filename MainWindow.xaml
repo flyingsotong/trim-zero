@@ -194,6 +194,10 @@
                                 </StackPanel>
                             </Grid>
 
+                            <TextBlock Text="{Binding TravelHint}" Visibility="{Binding TravelHintVisibility}"
+                                       FontSize="9" Foreground="{StaticResource Brush.Warn}" Margin="0,6,0,0"
+                                       TextWrapping="Wrap" />
+
                             <Border Height="1" Background="{StaticResource Stroke}" Margin="0,16,0,0" />
 
                             <TextBlock Text="FEEL" FontSize="8" Foreground="{StaticResource Dim}" Margin="0,16,0,6" />
