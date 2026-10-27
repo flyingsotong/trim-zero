@@ -7,8 +7,9 @@ no telemetry, no updater.
 
 [Download the latest release](https://github.com/flyingsotong/trim-zero/releases/latest)  ·  [Source](https://github.com/flyingsotong/trim-zero)  ·  [Tip jar](https://magentadebrief.com/donate/) if it earns its place
 
-> v0.2.1, October 2026: start with Windows, a new-aircraft prompt fix, and a device guard
-> that cannot mistake a switch panel for the trim wheel.
+> v0.2.2, October 2026: ZERO on the ground and nowhere else, so an autopilot leg can no
+> longer overwrite the TAKE OFF mark; a direction fix, a speed cap, and tooltips that
+> are no longer blank.
 
 ![Trim Zero](docs/og.png)
 
@@ -105,14 +106,16 @@ readable but a data write is ignored; POSITION is the control.
 
 ## Status
 
-v0.2.1, October 2026. Verified against MSFS 2024 1.9.20.0 and the C172SP for the sim
-read, aircraft title, ZERO, drift and position writes. The C172 hand-driven pass and
-the AP clutch passed with the native binding cleared. The A32 Vixxen path and the
-return to the C172 work; the per-aircraft datum and direction restore. The Meza is the
-tested wheel; other DirectInput analogue wheels are selected under DEVICE and AXIS, and
-reports are welcome. Start with Windows is implemented and the minimized/single-instance
-path is tested; the full logout/login cycle is still to be verified. Other aircraft use
-the same neutral and limit variables; please report differences.
+v0.2.2, October 2026. Verified against MSFS 2024 with the Meza in the C172: a ground
+ZERO records the mark, an in-flight ZERO leaves the takeoff datum and the saved count
+untouched, and a reload restores the band. The C172 hand-driven pass and the AP clutch
+pass with the native binding cleared, and two full flights were flown with the app as
+the only writer. The A32 Vixxen path and the return to the C172 work; the per-aircraft
+datum and direction restore. The Meza is the tested wheel; other DirectInput analogue
+wheels are selected under DEVICE and AXIS, and reports are welcome. Start with Windows
+is implemented and the minimized/single-instance path is tested; the full logout/login
+cycle is still to be verified. Other aircraft use the same neutral and limit variables;
+please report differences.
 
 ## Privacy
 
