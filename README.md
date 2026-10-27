@@ -7,9 +7,8 @@ no telemetry, no updater.
 
 [Download the latest release](https://github.com/flyingsotong/trim-zero/releases/latest)  ·  [Source](https://github.com/flyingsotong/trim-zero)  ·  [Tip jar](https://magentadebrief.com/donate/) if it earns its place
 
-> v0.2.2, October 2026: ZERO on the ground and nowhere else, so an autopilot leg can no
-> longer overwrite the TAKE OFF mark; a direction fix, a speed cap, and tooltips that
-> are no longer blank.
+> v0.2.2, October 2026: ZERO on the ground only, so an autopilot leg can't overwrite the
+> TAKE OFF mark. Plus a direction fix and a speed cap that keeps the whole wheel useful.
 
 ![Trim Zero](docs/og.png)
 
@@ -108,14 +107,13 @@ readable but a data write is ignored; POSITION is the control.
 
 v0.2.2, October 2026. Verified against MSFS 2024 with the Meza in the C172: a ground
 ZERO records the mark, an in-flight ZERO leaves the takeoff datum and the saved count
-untouched, and a reload restores the band. The C172 hand-driven pass and the AP clutch
-pass with the native binding cleared, and two full flights were flown with the app as
-the only writer. The A32 Vixxen path and the return to the C172 work; the per-aircraft
-datum and direction restore. The Meza is the tested wheel; other DirectInput analogue
-wheels are selected under DEVICE and AXIS, and reports are welcome. Start with Windows
-is implemented and the minimized/single-instance path is tested; the full logout/login
-cycle is still to be verified. Other aircraft use the same neutral and limit variables;
-please report differences.
+alone, and a reload restores the band. Two full flights with the app as the only writer,
+in and out of the autopilot, with no pitch change on disconnect. The A32 Vixxen path and
+the return to the C172 work, with the per-aircraft datum and direction restored. The
+Meza is the tested wheel; other DirectInput analogue wheels are selected under DEVICE
+and AXIS, and reports are welcome. Start with Windows is implemented and the
+minimized/single-instance path is tested; the full logout/login cycle isn't. Other
+aircraft use the same neutral and limit variables; please report differences.
 
 ## Privacy
 
